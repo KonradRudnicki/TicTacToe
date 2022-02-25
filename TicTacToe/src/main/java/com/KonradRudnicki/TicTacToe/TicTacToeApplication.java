@@ -56,15 +56,21 @@ public class TicTacToeApplication {
         }else {
             return "The field is already set";
         }
-        currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
 
         currentBoard.setFieldGrid(newBoard);
+        FieldEnum result =  WinnerCheck.winnerCheck(currentBoard);
+        currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
         boardRepository.save(currentBoard);
+
+        switch (result){
+            case X -> {return "Player X won";}
+            case O -> {return "Player O won";}
+            case DRAW ->{return "There is a draw";}
+        }
 
         return "TicTacToe - set: " + "x: " + x + " " + "y: " + y + " " + "fV: " + currentChar;
     }
 }
-
 
 //	@Autowired
 //	private CustomerRepository customerRepository;
