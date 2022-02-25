@@ -35,7 +35,7 @@ public class WinnerCheck {
                         }
                     }
 
-                    if (row == neededToWin || column == neededToWin || diagonal == neededToWin) {
+                    if (row - 1 == neededToWin || column - 1 == neededToWin || diagonal - 1 == neededToWin) {
                         result = currentChar;
                     }
                 }

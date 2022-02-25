@@ -17,9 +17,9 @@ class TicTacToeApplicationTests {
                 defaultBoard[i][j] = FieldEnum.EMPTY;
             }
         }
-        defaultBoard[0][0]= FieldEnum.X;
+        defaultBoard[1][0]= FieldEnum.X;
         defaultBoard[1][1]= FieldEnum.X;
-        defaultBoard[2][2]= FieldEnum.X;
+        defaultBoard[1][2]= FieldEnum.X;
 
         board.setFieldGrid(defaultBoard);
 
