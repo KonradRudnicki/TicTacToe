@@ -36,11 +36,11 @@ public class TicTacToeApplication {
 
         boardRepository.save(new Board().setFieldGrid(defaultBoard));
 
-        return "TicTacToe - new";
+        return "TicTacToe - new game";
     }
 
     @GetMapping("/set")
-    public String set(@RequestParam int x, @RequestParam int y, @RequestParam FieldEnum fieldValue) {
+    public String set(@RequestParam int x, @RequestParam int y) {
         FieldEnum[][] newBoard = new FieldEnum[3][3];
         Board currentBoard = Iterables.getLast(boardRepository.findAll());
 
@@ -50,11 +50,18 @@ public class TicTacToeApplication {
             }
         }
 
-        newBoard[x][y] = fieldValue;
+        FieldEnum currentChar = currentBoard.getFieldChar();
+        if (newBoard[x][y] == FieldEnum.EMPTY){
+            newBoard[x][y] = currentChar;
+        }else {
+            return "The field is already set";
+        }
+        currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
+
         currentBoard.setFieldGrid(newBoard);
         boardRepository.save(currentBoard);
 
-        return "TicTacToe - set: " + "x: " + x + " " + "y: " + y + " " + "fV: " + fieldValue;
+        return "TicTacToe - set: " + "x: " + x + " " + "y: " + y + " " + "fV: " + currentChar;
     }
 }
 
