@@ -4,7 +4,7 @@ public class WinnerCheck {
     public static FieldEnum winnerCheck(Board board){
         FieldEnum[][] currentBoard = board.getFieldGrid();
         int boardSize = currentBoard.length;
-        int neededToWin = 3;
+        int neededToWin = 5;
         FieldEnum currentChar = board.getFieldChar();
         FieldEnum result = FieldEnum.EMPTY;
 

@@ -26,7 +26,7 @@ public class TicTacToeApplication {
 
     @GetMapping("/new")
     public String index() {
-        FieldEnum[][] defaultBoard = new FieldEnum[3][3];
+        FieldEnum[][] defaultBoard = new FieldEnum[10][10];
 
         for (int i = 0; i < defaultBoard.length; i++) {
             for (int j = 0; j < defaultBoard[i].length; j++) {
@@ -41,7 +41,7 @@ public class TicTacToeApplication {
 
     @GetMapping("/set")
     public String set(@RequestParam int x, @RequestParam int y) {
-        FieldEnum[][] newBoard = new FieldEnum[3][3];
+        FieldEnum[][] newBoard = new FieldEnum[10][10];
         Board currentBoard = Iterables.getLast(boardRepository.findAll());
 
         for (int i = 0; i < newBoard.length; i++) {
