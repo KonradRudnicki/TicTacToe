@@ -8,28 +8,33 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
-
+@Controller
 @RestController
 @SpringBootApplication
 public class TicTacToeApplication {
+
+    @RequestMapping("/")
+    public String viewHome() {
+        return "home";
+    }
+
     private final int boardSize = 10;
 
     public static void main(String[] args) {
-        SpringApplication.run(TicTacToeApplication.class);
+        SpringApplication.run(TicTacToeApplication.class, args);
     }
 
     @Autowired
     private BoardRepository boardRepository;
 
     @GetMapping("/new")
-    public String index() {
+    @CrossOrigin(origins = "http://localhost:8000")
+    public Board index() {
         FieldEnum[][] defaultBoard = new FieldEnum[boardSize][boardSize];
 
         for (int i = 0; i < defaultBoard.length; i++) {
@@ -38,13 +43,15 @@ public class TicTacToeApplication {
             }
         }
 
-        boardRepository.save(new Board().setFieldGrid(defaultBoard));
+        Board board = new Board().setFieldGrid(defaultBoard);
+        boardRepository.save(board);
 
-        return "TicTacToe - new game";
+        return board;
     }
 
     @GetMapping("/set")
-    public String set(@RequestParam int x, @RequestParam int y) {
+    @CrossOrigin(origins = "http://localhost:8000")
+    public GameStatus set(@RequestParam int x, @RequestParam int y) {
         FieldEnum[][] newBoard = new FieldEnum[boardSize][boardSize];
         Board currentBoard = Iterables.getLast(boardRepository.findAll());
 
@@ -57,8 +64,6 @@ public class TicTacToeApplication {
         FieldEnum currentChar = currentBoard.getFieldChar();
         if (newBoard[x][y] == FieldEnum.EMPTY){
             newBoard[x][y] = currentChar;
-        }else {
-            return "The field is already set";
         }
 
         currentBoard.setFieldGrid(newBoard);
@@ -66,13 +71,7 @@ public class TicTacToeApplication {
         currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
         boardRepository.save(currentBoard);
 
-        switch (result){
-            case X -> {return "Player X won";}
-            case O -> {return "Player O won";}
-            case DRAW ->{return "There is a draw";}
-        }
-
-        return "TicTacToe - set: " + "x: " + x + " " + "y: " + y + " " + "fV: " + currentChar;
+        return new GameStatus(currentBoard, result);
     }
 }
 
