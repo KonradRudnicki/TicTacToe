@@ -5,6 +5,4 @@ public enum FieldEnum {
     X,
     O,
     DRAW
-
-
 }

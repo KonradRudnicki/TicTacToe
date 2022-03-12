@@ -50,4 +50,12 @@ public class Board {
     public FieldEnum[][] getFieldGrid() {
         return fieldGrid;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

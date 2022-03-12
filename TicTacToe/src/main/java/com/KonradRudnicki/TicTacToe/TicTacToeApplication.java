@@ -1,17 +1,13 @@
 package com.KonradRudnicki.TicTacToe;
 
 import com.google.common.collect.Iterables;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 @RestController
@@ -34,7 +30,7 @@ public class TicTacToeApplication {
 
     @GetMapping("/new")
     @CrossOrigin(origins = "http://localhost:8000")
-    public Board index() {
+    public Board newGame() {
         FieldEnum[][] defaultBoard = new FieldEnum[boardSize][boardSize];
 
         for (int i = 0; i < defaultBoard.length; i++) {
@@ -51,9 +47,10 @@ public class TicTacToeApplication {
 
     @GetMapping("/set")
     @CrossOrigin(origins = "http://localhost:8000")
-    public GameStatus set(@RequestParam int x, @RequestParam int y) {
+    public GameStatus set(@RequestParam int x, @RequestParam int y,@RequestParam long gameId) {
+
         FieldEnum[][] newBoard = new FieldEnum[boardSize][boardSize];
-        Board currentBoard = Iterables.getLast(boardRepository.findAll());
+        Board currentBoard = boardRepository.findById(gameId).orElse(Iterables.getLast(boardRepository.findAll()));
 
         for (int i = 0; i < newBoard.length; i++) {
             for (int j = 0; j < newBoard[i].length; j++) {
@@ -73,7 +70,15 @@ public class TicTacToeApplication {
 
         return new GameStatus(currentBoard, result);
     }
+
+    @GetMapping("/load")
+    @CrossOrigin(origins = "http://localhost:8000")
+    public Board loadGame(@RequestParam long gameId){
+        return boardRepository.findById(gameId).orElseGet(this::newGame);
+    }
+
 }
+
 
 //	@Autowired
 //	private CustomerRepository customerRepository;
