@@ -4,12 +4,6 @@ $(document).ready(function () {
     $("#new_game").click(async function () {
         if (window.location.hash) {
             await loadGame();
-
-            player = localStorage.getItem("player")
-            if (!player) {
-                player = "O";
-                localStorage.setItem("player", player);
-            }
         } else {
             const response = await fetch("http://localhost:8080/new", {});
             const board = await response.json();

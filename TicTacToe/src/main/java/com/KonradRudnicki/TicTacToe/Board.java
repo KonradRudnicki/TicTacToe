@@ -16,6 +16,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    public boolean NewBoard;
 
     @Type(
             type = "field_status_array",
@@ -41,6 +42,14 @@ public class Board {
         this.fieldChar = fieldChar;
     }
 
+    public boolean isNewBoard() {
+        return NewBoard;
+    }
+
+    public void setNewBoard(boolean newBoard) {
+        NewBoard = newBoard;
+    }
+
     public Board setFieldGrid(FieldEnum[][] fieldGrid) {
         this.fieldGrid = fieldGrid;
 
@@ -58,4 +67,6 @@ public class Board {
     public void setId(Long id) {
         this.id = id;
     }
+
+
 }

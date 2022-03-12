@@ -40,8 +40,8 @@ public class TicTacToeApplication {
         }
 
         Board board = new Board().setFieldGrid(defaultBoard);
+        board.setNewBoard(true);
         boardRepository.save(board);
-
         return board;
     }
 
@@ -66,6 +66,7 @@ public class TicTacToeApplication {
         currentBoard.setFieldGrid(newBoard);
         FieldEnum result =  WinnerCheck.winnerCheck(currentBoard);
         currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
+        currentBoard.setNewBoard(false);
         boardRepository.save(currentBoard);
 
         return new GameStatus(currentBoard, result);
