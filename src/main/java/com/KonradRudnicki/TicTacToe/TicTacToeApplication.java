@@ -27,7 +27,7 @@ public class TicTacToeApplication {
     private BoardRepository boardRepository;
 
     @GetMapping("/new")
-    @CrossOrigin(origins = "http://localhost:8000")
+//    @CrossOrigin(origins = "http://localhost:8000")
     public Board newGame() {
         FieldEnum[][] defaultBoard = new FieldEnum[boardSize][boardSize];
 
@@ -44,7 +44,7 @@ public class TicTacToeApplication {
     }
 
     @GetMapping("/set")
-    @CrossOrigin(origins = "http://localhost:8000")
+//    @CrossOrigin(origins = "http://localhost:8000")
     public GameStatus set(@RequestParam int x, @RequestParam int y,@RequestParam long gameId) {
 
         FieldEnum[][] newBoard = new FieldEnum[boardSize][boardSize];
@@ -76,7 +76,7 @@ public class TicTacToeApplication {
     }
 
     @GetMapping("/load")
-    @CrossOrigin(origins = "http://localhost:8000")
+//    @CrossOrigin(origins = "http://localhost:8000")
     public Board loadGame(@RequestParam long gameId){
         return boardRepository.findById(gameId).orElseGet(this::newGame);
     }
