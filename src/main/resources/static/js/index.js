@@ -1,11 +1,12 @@
 let player;
 let timer;
 let board;
+const host = (window.location.hostname === "localhost") ? "http://localhost:8080" : "";
 
 $(document).ready(function () {
     $("#new_game").click(async function () {
 
-        const response = await fetch("http://localhost:8080/new", {});
+        const response = await fetch(host + "/new", {});
         board = await response.json();
         window.location.hash = board.id;
         console.log(board);
@@ -52,7 +53,7 @@ function drawGame(board) {
 
             console.log(event);
 
-            const response = await fetch(`http://localhost:8080/set?x=${position[0]}&y=${position[1]}&gameId=${board.id}`);
+            const response = await fetch(  `${host}/set?x=${position[0]}&y=${position[1]}&gameId=${board.id}`);
             const gameStatus = await response.json();
 
             const id = `${position[0]}-${position[1]}`;
@@ -66,7 +67,7 @@ function drawGame(board) {
 }
 
 async function loadGame() {
-    const response = await fetch(`http://localhost:8080/load?gameId=${window.location.hash.substring(1)}`, {});
+    const response = await fetch(`${host}/load?gameId=${window.location.hash.substring(1)}`, {});
     const board = await response.json();
 
     drawGame(board);
