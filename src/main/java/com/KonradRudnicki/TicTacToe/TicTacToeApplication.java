@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Controller
 @RestController
 @SpringBootApplication
@@ -58,16 +56,21 @@ public class TicTacToeApplication {
             }
         }
 
+        FieldEnum result = currentBoard.getWinner();
         FieldEnum currentChar = currentBoard.getFieldChar();
-        if (newBoard[x][y] == FieldEnum.EMPTY){
-            newBoard[x][y] = currentChar;
-        }
 
-        currentBoard.setFieldGrid(newBoard);
-        FieldEnum result =  WinnerCheck.winnerCheck(currentBoard);
-        currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
-        currentBoard.setNewBoard(false);
-        boardRepository.save(currentBoard);
+        if (currentBoard.getWinner() == FieldEnum.EMPTY) {
+            if (newBoard[x][y] == FieldEnum.EMPTY) {
+                newBoard[x][y] = currentChar;
+            }
+
+            currentBoard.setFieldGrid(newBoard);
+            result = WinnerCheck.winnerCheck(currentBoard);
+            currentBoard.setFieldChar(currentChar == FieldEnum.X ? FieldEnum.O : FieldEnum.X);
+            currentBoard.setNewBoard(false);
+            currentBoard.setWinner(result);
+            boardRepository.save(currentBoard);
+        }
 
         return new GameStatus(currentBoard, result);
     }
@@ -79,7 +82,6 @@ public class TicTacToeApplication {
     }
 
 }
-
 
 //	@Autowired
 //	private CustomerRepository customerRepository;

@@ -17,6 +17,7 @@ public class Board {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     public boolean NewBoard;
+    private FieldEnum winner = FieldEnum.EMPTY;
 
     @Type(
             type = "field_status_array",
@@ -68,5 +69,11 @@ public class Board {
         this.id = id;
     }
 
+    public FieldEnum getWinner() {
+        return winner;
+    }
 
+    public void setWinner(FieldEnum winner) {
+        this.winner = winner;
+    }
 }

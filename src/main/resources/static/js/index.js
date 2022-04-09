@@ -1,30 +1,38 @@
 let player;
+let timer;
+let board;
 
 $(document).ready(function () {
     $("#new_game").click(async function () {
-        if (window.location.hash) {
-            await loadGame();
-        } else {
-            const response = await fetch("http://localhost:8080/new", {});
-            const board = await response.json();
-            window.location.hash = board.id;
-            console.log(board);
 
-            drawGame(board);
-            player = "X";
-            localStorage.setItem("player", player);
+        const response = await fetch("http://localhost:8080/new", {});
+        board = await response.json();
+        window.location.hash = board.id;
+        console.log(board);
+
+        drawGame(board);
+        player = "X";
+        localStorage.setItem("player", player);
+        if (timer){
+            clearInterval(timer);
         }
 
-        setInterval(loadGame, 1000)
+        timer = setInterval(loadGame, 1000);
     });
 });
 
 function drawGame(board) {
     $("#current_move").text(board.fieldChar);
     $("#player").text(player);
+    $("#winner").text(board.winner === "EMPTY" ? "No winner yet" : board.winner);
+    if (board.winner !== "EMPTY"){
+        clearInterval(timer);
+    }
 
-    $("#board").html("")
+
+    $("#board").html("");
     let isCompleted = true;
+    let requestCompleted = true;
 
     for (let i = 0; i < board.fieldGrid.length; i++) {
         for (let j = 0; j < board.fieldGrid[i].length; j++) {
@@ -36,18 +44,23 @@ function drawGame(board) {
 
     $("#board button").click(async function (event) {
         // $("#board").html("")
-        if (isCompleted) {
-            isCompleted = false
+        const position = event.target.id.split("-");
+
+        if (isCompleted && requestCompleted && board.fieldGrid[position[0]][position[1]] === "EMPTY"){
+            isCompleted = false;
+            requestCompleted = false;
+
             console.log(event);
 
-            const position = event.target.id.split("-");
             const response = await fetch(`http://localhost:8080/set?x=${position[0]}&y=${position[1]}&gameId=${board.id}`);
             const gameStatus = await response.json();
 
             const id = `${position[0]}-${position[1]}`;
-            $(`#board button#${id}`).text(gameStatus.board.fieldGrid[position[0]][position[1]]);
+            $(`#board button#${id}`).text(gameStatus.board.fieldGrid[position[0]][position[1]] === "EMPTY" ? "#" : gameStatus.board.fieldGrid[position[0]][position[1]]);
 
-            isCompleted = true
+            isCompleted = true;
+            requestCompleted = true;
+            board = gameStatus.board;
         }
     })
 }
